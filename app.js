@@ -43,16 +43,29 @@ function venueMarker(venue){
  return `<div class="map-marker map-marker--${venue}"><span class="map-marker-dot" aria-hidden="true"></span><span class="map-marker-name">${tr(cultureVenues[venue])}</span></div>`;
 }
 
+
+const placeCardImages=[
+ 'assets--culture-cards--yugi-v1.webp',
+ 'assets--culture-cards--poetry-v1.webp',
+ 'assets--culture-cards--namsadang-v1.webp'
+];
+
 function placeCard(i){
  const place=PLACES[i];
  const venue=i===0?'museum':'land';
  const isVisited=visited.has(i);
- return `<button class="place-card place-card--${venue}" data-place="${i}" data-visited="${isVisited}" aria-labelledby="place-title-${i}" aria-describedby="place-venue-${i}">
-   <span class="place-card-icon" aria-hidden="true">${place.icon}</span>
-   <span class="place-card-text"><strong id="place-title-${i}">${tr(place.name)}</strong><small id="place-venue-${i}">${tr(cultureVenues[venue])}</small></span>
-   <span id="place-state-${i}" class="place-card-state" aria-hidden="true">${isVisited?'✓':'›'}</span>
+ return `<button type="button" class="place-card" data-place="${i}" data-visited="${isVisited}" aria-labelledby="place-title-${i}" aria-describedby="place-venue-${i}">
+   <img class="place-card-image" src="${placeCardImages[i]}" alt="" width="1536" height="1024" loading="lazy" decoding="async">
+   <span class="place-card-body">
+     <span class="place-card-text">
+       <strong id="place-title-${i}">${tr(place.name)}</strong>
+       <small id="place-venue-${i}">${tr(cultureVenues[venue])}</small>
+     </span>
+     <span id="place-state-${i}" class="place-card-state" aria-hidden="true">${isVisited?'✓':'›'}</span>
+   </span>
  </button>`;
 }
+
 
 function cultureProgress(){
  const progress=`${visited.size} / ${PLACES.length}`;

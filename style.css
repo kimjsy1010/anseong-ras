@@ -121,7 +121,7 @@ html[lang="ru"] .game-tabs button{white-space:normal}
 }
 
 /* On the last map, the place names mark locations and the cards open activities. */
-.crumb--anseong { max-width: 780px; margin-inline: auto; }
+.crumb--anseong { max-width: 880px; margin-inline: auto; }
 .map.illustrated-map.map-step-3 { max-width: 500px; }
 .map-marker {
   position: absolute;
@@ -157,44 +157,65 @@ html[lang="ru"] .game-tabs button{white-space:normal}
 .place-cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  max-width: 780px;
-  margin: 14px auto 0;
+  gap: 18px;
+  max-width: 880px;
+  margin: 16px auto 0;
 }
 .place-card {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 16px;
-  align-items: center;
-  gap: 9px;
-  min-height: 74px;
-  padding: 12px;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background: white;
+  border-radius: 20px;
+  background: #fffdf7;
+  box-shadow: 0 4px 12px #233d3414;
   color: var(--ink);
   text-align: start;
 }
-.place-card-icon {
+.place-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  background: #efeadb;
+}
+.place-card-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+}
+.place-card-text {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+.place-card-text strong { font-size: 16px; }
+.place-card-text small { color: var(--muted); font-size: 12px; }
+.place-card-state {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  background: #e7efe1;
-  font-size: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #edf2e7;
+  color: var(--green);
+  font-size: 25px;
+  line-height: 1;
 }
-.place-card--museum .place-card-icon { background: #faead9; }
-.place-card-text { display: grid; gap: 4px; min-width: 0; word-break: keep-all; overflow-wrap: anywhere; line-height: 1.35; }
-.place-card-text strong { font-size: 15px; }
-.place-card-text small { color: var(--muted); font-size: 12px; }
-.place-card-state { color: var(--green); font-size: 21px; line-height: 1; text-align: center; }
-.place-card[data-visited="true"] .place-card-state { font-size: 15px; font-weight: 700; }
-.map-progress { margin: 12px 0 0; color: var(--ink); text-align: center; font-size: 14px; font-weight: 700; }
+.place-card[data-visited="true"] .place-card-state { font-size: 16px; font-weight: 700; }
+.map-progress { margin: 14px 0 0; color: var(--ink); text-align: center; font-size: 14px; font-weight: 700; }
 @media (hover: hover) {
-  .place-card:hover { border-color: var(--green); background: #f8fbf5; }
+  .place-card:hover { border-color: #799282; background: white; box-shadow: 0 7px 16px #233d3425; }
 }
 @media (max-width: 680px) {
   .crumb--anseong button { padding: 7px 10px; font-size: 14px; }
-  .place-cards { grid-template-columns: 1fr; gap: 8px; }
-  .place-card { min-height: 60px; padding: 9px 12px; }
+  .place-cards { grid-template-columns: 1fr; gap: 14px; max-width: 440px; }
 }
