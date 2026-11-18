@@ -18,7 +18,35 @@ const homeArtAlt=[
  'Baudeogi vẫy tay trước ngôi đình mái ngói và những ngọn đồi xanh ở Anseong',
  'Баудоги машет рукой на фоне зелёных холмов и беседки в Ансоне'
 ];
-function render(){stop();const currentRoute=route();document.documentElement.lang=lang;document.documentElement.classList.toggle("sports-page",currentRoute==="sports");document.documentElement.classList.toggle("reading-page",currentRoute==="reading");$('#language').value=lang;$('#guide').textContent=t('guide');$('#nav').innerHTML=routes.map((r,i)=>`<a href="#${r}" class="${currentRoute===r?'active':''}" ${currentRoute===r?'aria-current="page"':''}>${t('nav')[i]}</a>`).join('');({home:home,reading:reading,arts:arts,sports:sports}[currentRoute])()}
+const sectionCodes=['R','A','S'];
+const compactNavLabels=[
+ ['이야기','문화 탐험','전통놀이'],
+ ['Stories','Culture','Games'],
+ ['物語','文化','伝統遊び'],
+ ['故事','文化','传统游戏'],
+ ['Truyện','Văn hóa','Trò chơi'],
+ ['Истории','Культура','Игры']
+];
+
+function render(){
+ stop();
+ const currentRoute=route();
+ document.documentElement.lang=lang;
+ document.documentElement.classList.toggle('sports-page',currentRoute==='sports');
+ document.documentElement.classList.toggle('reading-page',currentRoute==='reading');
+ $('#language').value=lang;
+ $('#guide').textContent=t('guide');
+ const labels=t('labels');
+ const compactLabels=tr(compactNavLabels);
+ $('#nav').innerHTML=routes.map((destination,i)=>{
+  const active=destination===currentRoute;
+  const section=i-1;
+  const label=i===0?t('nav')[0]:`<span class="nav-full-label">${labels[section]}</span><span class="nav-compact-label">${compactLabels[section]}</span> <span class="nav-section-code">(${sectionCodes[section]})</span>`;
+  return `<a href="#${destination}" class="${active?'active':''}" ${active?'aria-current="page"':''}><span class="nav-label">${label}</span></a>`;
+ }).join('');
+ ({home,reading,arts,sports}[currentRoute])();
+}
+
 
 const homeMenuIcons=[
  'assets--home-icons--reading-v1.webp',
@@ -35,7 +63,7 @@ function home(){
  app.innerHTML=`<section class="hero"><div><span class="eyebrow">HELLO, ANSEONG! 👋</span><h1>${t('title')}</h1><p>${t('intro')}</p><a class="primary" href="#reading">${t('start')}</a></div><div class="hero-art"><img src="assets--home--anseong-baudeogi-v1.webp" alt="${tr(homeArtAlt)}" width="1536" height="1024" fetchpriority="high"></div></section>
  <div class="section-top"><h2>${t('choose')}</h2></div>
  <section class="cards">${menus}</section>
- <div class="passport"><span>✈</span><strong>${t('passport')}</strong>${['R','A','S'].map(x=>`<span class="stamp ${saved[x]?'done':''}" aria-label="${x}: ${saved[x]?'✓':'—'}">${x}${saved[x]?'✓':''}</span>`).join('')}</div>`;
+ <div class="passport"><span>✈</span><strong>${t('passport')}</strong>${sectionCodes.map(x=>`<span class="stamp ${saved[x]?'done':''}" aria-label="${x}: ${saved[x]?'✓':'—'}">${x}${saved[x]?'✓':''}</span>`).join('')}</div>`;
 }
 
 
