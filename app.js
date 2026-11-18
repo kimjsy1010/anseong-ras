@@ -25,14 +25,73 @@ const pages=STORIES[book];page=Math.max(0,Math.min(page,pages.length-1));const s
 app.innerHTML=head(0,'READING · 01')+`<div class="tabs">${t('books').map((b,i)=>`<button data-book="${i}" class="${book===i?'selected':''}">${b}</button>`).join('')}</div><article class="story ${s.image?'illustrated-story':''}"><div class="story-art ${s.image?'has-image':''}">${s.image?`<img src="${s.image}" alt="${tr(s.title)}" width="1536" height="1024">`:`<span>${s.icon}</span>`}</div><div class="story-body"><span class="eyebrow">${String(page+1).padStart(2,'0')} / ${String(count).padStart(2,'0')}</span><h2>${tr(s.title)}</h2><p>${tr(s.text)}</p><span class="word">${Array.isArray(s.word)?tr(s.word):s.word}</span></div></article><div class="pager"><button class="secondary" id="previous" ${page===0?'disabled':''}>${t('prev')}</button><span>${page+1} / ${count}</span><button class="primary" id="next">${page===count-1?t('finish'):t('next')}</button></div>${book===0?`<p class="story-source"><a href="https://www.anseong.go.kr/festival/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(['안성시 바우덕이축제 공식 홈페이지','Anseong Baudeogi Festival official website','安城市バウドギ祭り公式サイト','安城市巴乌德吉庆典官方网站','Trang chính thức lễ hội Baudeogi Anseong'])} ↗</a><br>${tr(['생애의 일화는 전승을 바탕으로 구성했습니다. 삽화는 이야기를 표현한 창작 그림입니다.','Life stories draw on local traditions. Illustrations are imaginative depictions.','生涯の逸話は伝承に基づき、挿絵は物語を表す創作です。','生平故事依据当地传说编写，插图为故事创作。','Các giai thoại dựa trên lời truyền lại. Tranh là minh họa sáng tạo.'])}</p>`:''}${book===1?`<p class="story-source"><a href="https://www.anseong.go.kr/tourPortal/munhak/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(C.books[0]&&['박두진문학관','Park Dujin Literature Museum','パク・トゥジン文学館','朴斗镇文学馆','Bảo tàng Văn học Park Dujin'])} ↗</a><br>${tr(PARK_NOTE)}</p>`:''}${book===2?`<p class="story-source"><a href="https://www.anseong.go.kr/tourPortal/museum/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(['안성맞춤박물관','Anseong Machum Museum','安城マッチュム博物館','安城 Machum博物馆','Bảo tàng Anseong Machum'])} ↗</a><br>${tr(YUGI_NOTE)}</p>`:''}<div class="feedback" id="reading-feedback" aria-live="polite"></div>`;
 document.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{book=+b.dataset.book;page=0;reading()});$('#previous').onclick=()=>{if(page>0){page--;reading()}};$('#next').onclick=()=>{if(page<count-1){page++;reading()}else{stamp('R');$('#reading-feedback').textContent=t('done')}};
 }
+const cultureVenues = {
+ land: ['안성맞춤랜드','Anseong Machum Land','安城マッチュムランド','安城 Machum乐园','Anseong Machum Land'],
+ museum: ['안성맞춤박물관','Anseong Machum Museum','安城マッチュム博物館','安城 Machum博物馆','Bảo tàng Anseong Machum']
+};
+
+const cultureCardHint=[
+ '카드를 눌러 안성의 문화를 만나 보세요.',
+ 'Choose a card to explore Anseong’s culture.',
+ 'カードを選んで安城の文化に触れてみましょう。',
+ '选择卡片，探索安城文化。',
+ 'Chọn một thẻ để khám phá văn hóa Anseong.',
+ 'Выберите карточку, чтобы познакомиться с культурой Ансона.'
+];
+
+function venueMarker(venue){
+ return `<div class="map-marker map-marker--${venue}"><span class="map-marker-dot" aria-hidden="true"></span><span class="map-marker-name">${tr(cultureVenues[venue])}</span></div>`;
+}
+
+function placeCard(i){
+ const place=PLACES[i];
+ const venue=i===0?'museum':'land';
+ const isVisited=visited.has(i);
+ return `<button class="place-card place-card--${venue}" data-place="${i}" data-visited="${isVisited}" aria-labelledby="place-title-${i}" aria-describedby="place-venue-${i}">
+   <span class="place-card-icon" aria-hidden="true">${place.icon}</span>
+   <span class="place-card-text"><strong id="place-title-${i}">${tr(place.name)}</strong><small id="place-venue-${i}">${tr(cultureVenues[venue])}</small></span>
+   <span id="place-state-${i}" class="place-card-state" aria-hidden="true">${isVisited?'✓':'›'}</span>
+ </button>`;
+}
+
+function cultureProgress(){
+ const progress=`${visited.size} / ${PLACES.length}`;
+ return visited.size===PLACES.length?progress+' · '+t('done'):progress;
+}
+
 function arts(){
-const levels=[t('world'),tr(['한반도','Korean Peninsula','朝鮮半島','朝鲜半岛','Bán đảo Triều Tiên']),t('korea'),t('anseong')];
-const images=['assets--maps-v1--04-world.webp','assets--maps-v1--01-korean-peninsula.webp','assets--maps-v1--02-south-korea.webp','assets--maps-v1--03-anseong.webp'];
-mapLevel=Math.max(0,Math.min(3,mapLevel));
-app.innerHTML=head(1,'ARTS · 02')+`<div class="crumb">${levels.slice(0,mapLevel+1).map((label,i)=>`<button data-level="${i}" ${i===mapLevel?'aria-current="step"':''}>${label} ${i<mapLevel?'›':''}</button>`).join('')}</div><div class="map illustrated-map map-step-${mapLevel}"><img class="map-art" src="${images[mapLevel]}" alt="${levels[mapLevel]}">${mapLevel<3?`<button class="map-zoom primary" id="zoom">${mapLevel===0?'← '+levels[mapLevel+1]:mapLevel===1?levels[mapLevel+1]:'↖ '+levels[mapLevel+1]}</button>`:`<div class="map-buttons rough-places"><div class="museum-pin"><span class="land-label museum-label">${tr(['안성맞춤박물관','Anseong Machum Museum','安城マッチュム博物館','安城 Machum博物馆','Bảo tàng Anseong Machum'])}</span>${placeButton(0)}</div><div class="land-pins"><span class="land-label">${tr(['안성맞춤랜드','Anseong Machum Land','安城マッチュムランド','安城 Machum乐园','Anseong Machum Land'])}</span>${placeButton(2)}${placeButton(1)}</div></div>`}</div><p class="map-note">${t('mapHint')}</p><div class="feedback">${mapLevel===3?`${visited.size} / 3 ${saved.A?'· '+t('done'):''}`:''}</div>`;
-document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{mapLevel=+b.dataset.level;arts()});
-if(mapLevel<3)$('#zoom').onclick=()=>{mapLevel++;arts()};
-document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>{const i=+b.dataset.place,p=PLACES[i];visited.add(i);saved.visitedPlaces=[...visited];if(visited.size===3)stamp('A');else persist();arts();if(i===0){openYugiExplore();return}if(i===2){openBaudeogiExplore();return}if(i===1){openParkExplore();return}modal(`<div class="modal-icon">${p.icon}</div><h2>${tr(p.name)}</h2><p>${tr(p.text)}</p><a href="${p.url}" target="_blank" rel="noopener">${t('sources')} ↗</a>`)});
+ const levels=[t('world'),tr(['한반도','Korean Peninsula','朝鮮半島','朝鲜半岛','Bán đảo Triều Tiên']),t('korea'),t('anseong')];
+ const images=['assets--maps-v1--04-world.webp','assets--maps-v1--01-korean-peninsula.webp','assets--maps-v1--02-south-korea.webp','assets--maps-v1--03-anseong-outline-v1.webp'];
+ mapLevel=Math.max(0,Math.min(3,mapLevel));
+ const atAnseong=mapLevel===3;
+ const crumbs=levels.slice(0,mapLevel+1).map((label,i)=>`<button data-level="${i}" ${i===mapLevel?'aria-current="step"':''}>${label} ${i<mapLevel?'›':''}</button>`).join('');
+ const nextLabel=mapLevel===0?'← '+levels[1]:mapLevel===1?levels[2]:'↖ '+levels[3];
+ const overlay=atAnseong?venueMarker('museum')+venueMarker('land'):`<button class="map-zoom primary" id="zoom">${nextLabel}</button>`;
+ const cards=atAnseong?`<section class="place-cards" aria-label="${t('nav')[2]}">${[2,1,0].map(placeCard).join('')}</section><p class="map-progress" id="culture-progress" aria-live="polite">${cultureProgress()}</p>`:'';
+ app.innerHTML=head(1,'ARTS · 02')+`<div class="crumb${atAnseong?' crumb--anseong':''}">${crumbs}</div><div class="map illustrated-map map-step-${mapLevel}">
+   <img class="map-art" src="${images[mapLevel]}" alt="${levels[mapLevel]}">${overlay}
+ </div><p class="map-note">${atAnseong?tr(cultureCardHint):t('mapHint')}</p>${cards}`;
+ document.querySelectorAll('[data-level]').forEach(button=>button.onclick=()=>{mapLevel=+button.dataset.level;arts()});
+ if(!atAnseong){
+  $('#zoom').onclick=()=>{mapLevel++;arts()};
+  return;
+ }
+ const openPlaces=[openYugiExplore,openParkExplore,openBaudeogiExplore];
+ document.querySelectorAll('[data-place]').forEach(button=>{
+  button.onclick=()=>{
+   const i=+button.dataset.place;
+   if(!visited.has(i)){
+    visited.add(i);
+    saved.visitedPlaces=[...visited];
+    if(visited.size===PLACES.length)stamp('A');
+    else persist();
+    button.dataset.visited='true';
+    $('#place-state-'+i).textContent='✓';
+    $('#culture-progress').textContent=cultureProgress();
+   }
+   openPlaces[i]();
+  };
+ });
 }
 function sports(){
  const rope=gameType===1,beona=gameType===2;
@@ -97,5 +156,3 @@ $('#guide').onclick=()=>modal(`<h2>${t('guide')}</h2><div class="guide-purpose">
 $('.close').onclick=()=>$('#modal').close();$('#modal').onclick=e=>{if(e.target===$('#modal')){const r=$('#modal').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('#modal').close()}};
 $('#language').onchange=e=>{lang=e.target.value;saved.lang=lang;persist();render()};window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});
 document.addEventListener('keydown',e=>{if(!playing||$('#modal').open||/SELECT|INPUT|TEXTAREA/.test(e.target.tagName))return;if(['ArrowLeft','ArrowRight',' '].includes(e.key)){e.preventDefault();if(e.key===' '&&!e.repeat)kick();else keys.add(e.key)}});document.addEventListener('keyup',e=>keys.delete(e.key));window.addEventListener('blur',()=>keys.clear());document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing){stop();sports()}});render();
-
-function placeButton(i){const p=PLACES[i];return `<button data-place="${i}">${p.icon} ${tr(p.name)} ${visited.has(i)?'✓':''}</button>`}
