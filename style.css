@@ -76,7 +76,7 @@
 
 .culture-explore h2{margin:8px 0 14px}.culture-explore .eyebrow{margin-top:8px}.culture-summary{background:#f5f1e4;border-radius:14px;padding:15px 18px}.culture-resource{border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0}.culture-resource h3{margin:0;font-size:18px}.culture-resource p{margin:10px 0}.culture-resource .secondary{font-size:14px;line-height:1.5}.culture-reflection{margin-top:24px}.culture-reflection label{display:block;font-size:18px;font-weight:700;margin-bottom:12px}.culture-reflection textarea{display:block;width:100%;resize:vertical;min-height:100px;padding:14px;border:1px solid #a7b7a3;border-radius:12px;font:inherit;line-height:1.7;color:var(--ink);background:#fffef9}.culture-reflection textarea:focus-visible{outline:3px solid #dc6838;outline-offset:2px}.reflection-status{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--green);margin-top:8px}.culture-explore .small{font-size:12px}dialog{max-height:90dvh;overflow-y:auto}@media(max-width:500px){.culture-resource{padding:14px}dialog{padding:24px}.culture-resource .secondary{width:100%;text-align:center}}
 
-@media (max-width: 700px) {
+@media (max-width: 700px), (pointer: coarse) {
   #modal[open]:has(.culture-explore) {
     display: grid;
     grid-template: auto minmax(0, 1fr) / minmax(0, 1fr);
