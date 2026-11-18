@@ -81,39 +81,39 @@ function home(){
 
 const passportCopy=[
  {
-  intro:"활동을 마치며 도장을 모아 보세요. 세 개를 다 모으면 ‘안성 문화 탐험대’ 배지가 나타나요.",
+  intro:"활동을 마치며 도장을 모아 보세요. 세 개를 다 모으면 ‘안성맞춤 RAS 마스터’ 배지가 나타나요.",
   earned:"도장 받음", pending:"아직 못 받은 도장",
-  success:"세 도장을 다 모아 배지를 받았어요!", badge:"안성 문화 탐험대",
+  success:"세 도장을 다 모아 배지를 받았어요!", badge:"안성맞춤 RAS 마스터",
   steps:["이야기 한 편을 끝까지 읽고 ‘읽기 완료’ 누르기", "문화 탐험 카드 세 장 모두 열기", "전통놀이 한 판 마치기"]
  },
  {
-  intro:"Collect stamps as you complete the activities. Collect all three to reveal your Anseong Culture Explorer badge.",
+  intro:"Collect stamps as you complete the activities. Collect all three to reveal your Anseong Machum RAS Master badge.",
   earned:"Stamp earned", pending:"Stamp yet to be earned",
-  success:"You collected all three stamps and earned a badge!", badge:"Anseong Culture Explorer",
+  success:"You collected all three stamps and earned a badge!", badge:"Anseong Machum RAS Master",
   steps:["Read one story to the end and select ‘Finish reading’.", "Open all three culture cards.", "Finish a round of any traditional game."]
  },
  {
-  intro:"活動を終えてスタンプを集めましょう。３つそろうと「安城文化探検隊」のバッジが現れます。",
+  intro:"活動を終えてスタンプを集めましょう。３つそろうと「安城マッチュム RASマスター」のバッジが現れます。",
   earned:"獲得済み", pending:"まだ獲得していません",
-  success:"スタンプを３つ集めてバッジをゲット！", badge:"安城文化探検隊",
+  success:"スタンプを３つ集めてバッジをゲット！", badge:"安城マッチュム RASマスター",
   steps:["物語を１つ最後まで読んで「読了」を押しましょう。", "文化探検カードを３枚とも開きましょう。", "伝統遊びを１回最後まで遊びましょう。"]
  },
  {
-  intro:"完成活动，收集印章吧！集齐三个印章，就会出现“安城文化探险队”徽章。",
+  intro:"完成活动，收集印章吧！集齐三个印章，就会出现“安城 Machum RAS 大师”徽章。",
   earned:"已获得印章", pending:"尚未获得印章",
-  success:"集齐三个印章，获得了徽章！", badge:"安城文化探险队",
+  success:"集齐三个印章，获得了徽章！", badge:"安城 Machum RAS 大师",
   steps:["读完一篇故事，点击“完成阅读”。", "打开全部三张文化探索卡片。", "完成一局传统游戏。"]
  },
  {
-  intro:"Hãy hoàn thành các hoạt động để sưu tập con dấu. Khi có đủ ba con dấu, huy hiệu ‘Khám phá văn hóa Anseong’ sẽ xuất hiện.",
+  intro:"Hãy hoàn thành các hoạt động để sưu tập con dấu. Khi có đủ ba con dấu, huy hiệu ‘Bậc thầy Anseong Machum RAS’ sẽ xuất hiện.",
   earned:"Đã nhận con dấu", pending:"Chưa nhận con dấu",
-  success:"Bạn đã thu thập đủ ba con dấu và nhận được huy hiệu!", badge:"Khám phá văn hóa Anseong",
+  success:"Bạn đã thu thập đủ ba con dấu và nhận được huy hiệu!", badge:"Bậc thầy Anseong Machum RAS",
   steps:["Đọc hết một truyện và bấm ‘Đọc xong’.", "Mở cả ba thẻ khám phá văn hóa.", "Chơi hết một lượt trò chơi truyền thống."]
  },
  {
-  intro:"Выполняйте задания и собирайте печати. Соберите все три, и появится значок «Знаток культуры Ансона».",
+  intro:"Выполняйте задания и собирайте печати. Соберите все три, и появится значок «Мастер RAS Ансон Мачхум».",
   earned:"Печать получена", pending:"Печать ещё не получена",
-  success:"Вы собрали все три печати и получили значок!", badge:"Знаток культуры Ансона",
+  success:"Вы собрали все три печати и получили значок!", badge:"Мастер RAS Ансон Мачхум",
   steps:["Дочитайте одну историю и нажмите «Прочитано».", "Откройте все три карточки о культуре.", "Завершите один раунд любой традиционной игры."]
  }
 ];
@@ -126,7 +126,7 @@ function travelPassport(){
  const steps=sectionCodes.map((code,i)=>{
   const earned=Boolean(saved[code]);
   return `<li class="passport-step">
-    <span class="passport-stamp${earned?' done':''}" aria-label="${earned?copy.earned:copy.pending}">${code}${earned?'<span aria-hidden="true">✓</span>':''}</span>
+    <span class="passport-stamp${earned?' done':''}" role="img" aria-label="${code} · ${earned?copy.earned:copy.pending}">${code}${earned?'<span aria-hidden="true">✓</span>':''}</span>
     <div><strong>${labels[i]}</strong><p>${copy.steps[i]}</p></div>
   </li>`;
  }).join('');
@@ -135,7 +135,7 @@ function travelPassport(){
    <p class="passport-intro">${complete?copy.success:copy.intro}</p>
    <ul class="passport-steps" role="list">${steps}</ul>
    ${complete?`<div class="passport-reward">
-     <span class="passport-medal"><img src="${homeMenuIcons[1]}" width="288" height="288" alt=""></span>
+     <span class="passport-shield" aria-hidden="true">RAS</span>
      <strong>${copy.badge}</strong>
    </div>`:''}
  </section>`;

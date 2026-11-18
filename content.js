@@ -1,8 +1,8 @@
 const LANGS=['ko','en','ja','zh','vi'];
 const C={
 nav:[['여행 시작','이야기 읽기','문화 탐험','놀이 마당'],['Home','Stories','Culture map','Games'],['ホーム','物語','文化マップ','遊び'],['首页','故事','文化地图','游戏'],['Trang chủ','Câu chuyện','Bản đồ văn hóa','Trò chơi']],
-title:['안성에서 만나는\n우리의 새로운 이야기','Discover new stories\ntogether in Anseong.','安城で出会う\n新しい物語','在安城，\n开启新的故事','Khám phá Anseong,\nmở ra câu chuyện mới'],
-intro:['읽고, 발견하고, 함께 놀아요. 언어는 달라도 즐거움은 통하는 안성 문화 여행에 초대합니다.','Read, discover and play together. Explore the culture of Anseong, one small adventure at a time.','読んで、見つけて、一緒に遊ぼう。安城の文化をめぐる旅へ出発！','一起阅读、探索和游戏。欢迎踏上安城文化之旅！','Cùng đọc, khám phá và vui chơi. Hãy bắt đầu hành trình văn hóa Anseong!'],
+title:["안성을 만나는\n세 가지 방법","Three ways to\nexplore Anseong","安城を知る\n３つの方法","认识安城的\n三种方式","Ba cách để\nkhám phá Anseong"],
+intro:["안성 이야기를 읽고, 지도에서 안성의 문화를 찾아보고, 바우덕이와 전통놀이에 도전해 봐요.","Read stories about Anseong, explore its culture on the map, and try traditional games with Baudeogi.","安城の物語を読んで、地図で安城の文化を見つけて、バウドギと伝統遊びに挑戦してみよう。","读一读安城的故事，在地图上探索安城文化，再和巴乌德吉一起挑战传统游戏吧！","Đọc truyện về Anseong, khám phá văn hóa địa phương trên bản đồ và thử chơi các trò chơi dân gian cùng Baudeogi nhé!"],
 start:['이야기로 여행 시작 →','Start with a story →','物語から出発 →','从故事开始 →','Bắt đầu với câu chuyện →'],
 choose:['오늘은 무엇을 해 볼까요?','Choose your adventure','今日は何をしよう？','今天想体验什么？','Hôm nay bạn muốn khám phá gì?'],
 labels:[["이야기 속 안성","안성 문화 탐험","바우덕이와 전통놀이"],["Anseong in stories","Explore Anseong Culture","Folk Games with Baudeogi"],["物語の中の安城","安城の文化探検","バウドギと伝統遊び"],["故事里的安城","探索安城文化","和巴乌德吉玩传统游戏"],["Anseong qua truyện","Khám phá văn hóa Anseong","Trò chơi dân gian"]],

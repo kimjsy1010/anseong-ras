@@ -364,6 +364,8 @@ header {
   .sports-page .scorebar { padding-block: 3px 5px; }
 }
 
+.hero:lang(ko) p { word-break: keep-all; overflow-wrap: break-word; }
+
 /* Home travel stamps */
 .passport {
   margin-top: 28px;
@@ -412,42 +414,98 @@ header {
 .passport-step p { margin: 3px 0 0; font-size: 13px; line-height: 1.45; }
 .passport:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
 .passport-stamp {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
+  position: relative;
+  display: grid;
+  place-items: center;
   width: 44px;
   height: 44px;
-  border: 2px dashed #a2b19b;
+  box-sizing: border-box;
+  border: 2px dashed #8d8d8d;
   border-radius: 50%;
-  color: var(--green);
-  font-weight: 700;
+  color: #606060;
+  background: #f8f7f4;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1;
 }
-.passport-stamp.done { border-style: solid; border-color: var(--green); background: #e1ecdb; }
-.passport-stamp span { font-size: 11px; }
+.passport-stamp.done {
+  border-style: solid;
+  border-color: currentColor;
+  border-radius: 49% 51% 48% 52% / 51% 47% 53% 49%;
+  color: #a42e2b;
+  background: transparent;
+  transform: rotate(-11deg);
+}
+.passport-step:nth-child(2) .passport-stamp.done { transform: rotate(8deg); }
+.passport-step:nth-child(3) .passport-stamp.done { transform: rotate(-6deg); }
+.passport-stamp.done::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px solid currentColor;
+  border-radius: inherit;
+  opacity: .72;
+}
+.passport-stamp.done::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at 1px 2px, #fffdf8 0 .55px, transparent .85px) 1px 2px / 6px 7px,
+    radial-gradient(circle at 3px 4px, #fffdf8 0 .65px, transparent .9px) 2px 0 / 9px 11px;
+  opacity: .8;
+  pointer-events: none;
+}
+.passport-stamp span {
+  position: absolute;
+  right: 4px;
+  bottom: 5px;
+  font-size: 9px;
+}
 .passport-reward {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 14px;
-  padding: 10px 14px;
-  border: 1px solid #e4c788;
+  gap: clamp(12px, 3vw, 22px);
+  margin-top: 16px;
+  padding: 12px clamp(12px, 3vw, 20px);
+  border: 1px solid #ddc386;
   border-radius: 14px;
-  color: #674819;
-  background: #fff1ce;
+  color: #63441c;
+  background: #fff3d3;
 }
-.passport-medal {
-  flex: 0 0 52px;
-  height: 52px;
+.passport-reward strong { font-size: clamp(17px, 2.4vw, 22px); line-height: 1.3; }
+.passport-shield {
+  --shield-shape: polygon(50% 0, 73% 8%, 98% 13%, 96% 49%, 88% 69%, 72% 85%, 50% 100%, 28% 85%, 12% 69%, 4% 49%, 2% 13%, 27% 8%);
+  position: relative;
   display: grid;
   place-items: center;
-  box-sizing: border-box;
-  border: 2px solid #c99442;
-  border-radius: 50%;
-  background: #ffdf91;
+  flex: 0 0 64px;
+  height: 73px;
+  isolation: isolate;
+  clip-path: var(--shield-shape);
+  color: #fff3c9;
+  background: linear-gradient(135deg, #a06526, #f2d381 29%, #bd8232 70%, #83501f);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-shadow: 0 1px 1px #183a2a;
 }
-.passport-medal img { display: block; width: 40px; height: 40px; }
+.passport-shield::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+  clip-path: var(--shield-shape);
+  background: linear-gradient(135deg, #3a7659, #1b3b2e 85%);
+}
+.passport-shield::after {
+  content: "";
+  position: absolute;
+  bottom: 18px;
+  width: 18px;
+  border-bottom: 1px solid #f2d381;
+}
 @media (max-width: 700px) {
   .passport-steps { grid-template-columns: 1fr; }
 }
