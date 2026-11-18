@@ -18,6 +18,15 @@ const homeArtAlt=[
  'Baudeogi vẫy tay trước ngôi đình mái ngói và những ngọn đồi xanh ở Anseong',
  'Баудоги машет рукой на фоне зелёных холмов и беседки в Ансоне'
 ];
+const brandCopy=[
+ ["세계 친구들과 함께하는 안성 문화 여행","2026 안성 국제교류협력 콘텐츠 제작 지원"],
+ ["Anseong culture with friends around the world","2026 Anseong International Exchange & Cooperation Content Grant"],
+ ["世界の友だちとめぐる安城の文化","2026年 安城国際交流協力コンテンツ制作支援"],
+ ["和世界各地的朋友一起探索安城文化","2026年安城国际交流合作内容制作支持项目"],
+ ["Khám phá Anseong cùng bạn bè quốc tế","Anseong 2026 · Hỗ trợ sản xuất nội dung giao lưu và hợp tác quốc tế"],
+ ["Культура Ансона с друзьями из разных стран","Ансон 2026 · Поддержка создания контента для международного обмена и сотрудничества"]
+];
+
 const sectionCodes=['R','A','S'];
 const compactNavLabels=[
  ['이야기','문화 탐험','전통놀이'],
@@ -32,6 +41,10 @@ function render(){
  stop();
  const currentRoute=route();
  document.documentElement.lang=lang;
+ const [subtitle,program]=tr(brandCopy);
+ $('#brand-subtitle').textContent=subtitle;
+ $('#brand-program').textContent=program;
+ document.title='안성맞춤 RAS · '+subtitle;
  document.documentElement.classList.toggle('sports-page',currentRoute==='sports');
  document.documentElement.classList.toggle('reading-page',currentRoute==='reading');
  $('#language').value=lang;
