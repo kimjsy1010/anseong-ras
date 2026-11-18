@@ -7,5 +7,4 @@ const PARK_STORY=[
 ];
 STORIES.splice(1,0,PARK_STORY);
 ['박두진 이야기','Park Dujin’s story','パク・トゥジンの物語','朴斗镇的故事','Câu chuyện Park Dujin'].forEach((title,i)=>C.books[i].splice(1,0,title));
-['바우덕이·박두진·안성맞춤 유기의 이야기를 한 장씩 만나 보세요.','Discover Baudeogi, Park Dujin and Anseong brassware, one page at a time.','バウドギ、パク・トゥジン、安城の器の物語を読もう。','逐页了解巴乌德吉、朴斗镇和安城铜器的故事。','Khám phá Baudeogi, Park Dujin và đồ đồng Anseong qua từng trang.'].forEach((text,i)=>C.descs[i][0]=text);
 const PARK_NOTE=['공식 문학관 자료를 바탕으로 새로 쓴 이야기입니다. 어린 시절과 장면은 창작 삽화이며, 시 쓰기는 앱 자체 활동입니다.','Based on official museum information. The illustrations, including the childhood scenes, are imagined depictions; the poetry-writing activity was created for this app.','公式文学館資料をもとにした物語です。幼少期や場面の挿絵、詩作活動は創作です。','故事依据官方文学馆资料重新编写。童年及场景为创作插图，写诗为本应用设计的活动。','Dựa trên tư liệu chính thức của bảo tàng. Hình ảnh thời thơ ấu và các cảnh là minh họa sáng tạo; hoạt động viết thơ do ứng dụng thiết kế.'];
