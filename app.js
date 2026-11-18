@@ -135,7 +135,7 @@ function travelPassport(){
    <p class="passport-intro">${complete?copy.success:copy.intro}</p>
    <ul class="passport-steps" role="list">${steps}</ul>
    ${complete?`<div class="passport-reward">
-     <span class="passport-shield" aria-hidden="true">RAS</span>
+     <span class="passport-shield" aria-hidden="true"><span class="passport-shield-brand">안성맞춤</span>RAS</span>
      <strong>${copy.badge}</strong>
    </div>`:''}
  </section>`;

@@ -466,6 +466,7 @@ header {
 .passport-reward {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: clamp(12px, 3vw, 22px);
   margin-top: 16px;
   padding: 12px clamp(12px, 3vw, 20px);
@@ -474,7 +475,7 @@ header {
   color: #63441c;
   background: #fff3d3;
 }
-.passport-reward strong { font-size: clamp(17px, 2.4vw, 22px); line-height: 1.3; }
+.passport-reward strong { font-size: clamp(17px, 2.4vw, 22px); line-height: 1.3; text-align: center; }
 .passport-shield {
   --shield-shape: polygon(50% 0, 73% 8%, 98% 13%, 96% 49%, 88% 69%, 72% 85%, 50% 100%, 28% 85%, 12% 69%, 4% 49%, 2% 13%, 27% 8%);
   position: relative;
@@ -490,6 +491,15 @@ header {
   font-weight: 800;
   letter-spacing: .05em;
   text-shadow: 0 1px 1px #183a2a;
+}
+.passport-shield-brand {
+  position: absolute;
+  inset: 15px 0 auto;
+  color: #f4df9d;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
 }
 .passport-shield::before {
   content: "";
