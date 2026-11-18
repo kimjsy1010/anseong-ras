@@ -18,13 +18,13 @@ const homeArtAlt=[
  'Baudeogi vẫy tay trước ngôi đình mái ngói và những ngọn đồi xanh ở Anseong',
  'Баудоги машет рукой на фоне зелёных холмов и беседки в Ансоне'
 ];
-const brandCopy=[
- ["세계 친구들과 함께하는 안성 문화 여행","국제교류 수업을 위한 다국어 학습자료"],
- ["Anseong culture with friends around the world","Multilingual resources for international exchange lessons"],
- ["世界の友だちとめぐる安城の文化","国際交流の授業で使える多言語教材"],
- ["和世界各地的朋友一起探索安城文化","用于国际交流课程的多语种学习资料"],
- ["Khám phá Anseong cùng bạn bè quốc tế","Tài liệu học tập đa ngôn ngữ cho các tiết học giao lưu quốc tế"],
- ["Культура Ансона с друзьями из разных стран","Многоязычные материалы для занятий в рамках международного обмена"]
+const brandSubtitles=[
+ "세계 친구들과 함께하는 안성 문화 여행",
+ "Anseong culture with friends around the world",
+ "世界の友だちとめぐる安城の文化",
+ "和世界各地的朋友一起探索安城文化",
+ "Khám phá Anseong cùng bạn bè quốc tế",
+ "Культура Ансона с друзьями из разных стран"
 ];
 
 const sectionCodes=['R','A','S'];
@@ -41,9 +41,8 @@ function render(){
  stop();
  const currentRoute=route();
  document.documentElement.lang=lang;
- const [subtitle,description]=tr(brandCopy);
+ const subtitle=tr(brandSubtitles);
  $('#brand-subtitle').textContent=subtitle;
- $('#brand-program').textContent=description;
  document.title='안성맞춤 RAS · '+subtitle;
  document.documentElement.classList.toggle('sports-page',currentRoute==='sports');
  document.documentElement.classList.toggle('reading-page',currentRoute==='reading');
@@ -76,9 +75,71 @@ function home(){
  app.innerHTML=`<section class="hero"><div><span class="eyebrow">HELLO, ANSEONG! 👋</span><h1>${t('title')}</h1><p>${t('intro')}</p><a class="primary" href="#reading">${t('start')}</a></div><div class="hero-art"><img src="assets--home--anseong-baudeogi-v1.webp" alt="${tr(homeArtAlt)}" width="1536" height="1024" fetchpriority="high"></div></section>
  <div class="section-top"><h2>${t('choose')}</h2></div>
  <section class="cards">${menus}</section>
- <div class="passport"><span>✈</span><strong>${t('passport')}</strong>${sectionCodes.map(x=>`<span class="stamp ${saved[x]?'done':''}" aria-label="${x}: ${saved[x]?'✓':'—'}">${x}${saved[x]?'✓':''}</span>`).join('')}</div>`;
+ ${travelPassport()}`;
 }
 
+
+const passportCopy=[
+ {
+  intro:"활동을 마치며 도장을 모아 보세요. 세 개를 다 모으면 ‘안성 문화 탐험대’ 배지가 나타나요.",
+  earned:"도장 받음", pending:"아직 못 받은 도장",
+  success:"세 도장을 다 모아 배지를 받았어요!", badge:"안성 문화 탐험대",
+  steps:["이야기 한 편을 끝까지 읽고 ‘읽기 완료’ 누르기", "문화 탐험 카드 세 장 모두 열기", "전통놀이 한 판 마치기"]
+ },
+ {
+  intro:"Collect stamps as you complete the activities. Collect all three to reveal your Anseong Culture Explorer badge.",
+  earned:"Stamp earned", pending:"Stamp yet to be earned",
+  success:"You collected all three stamps and earned a badge!", badge:"Anseong Culture Explorer",
+  steps:["Read one story to the end and select ‘Finish reading’.", "Open all three culture cards.", "Finish a round of any traditional game."]
+ },
+ {
+  intro:"活動を終えてスタンプを集めましょう。３つそろうと「安城文化探検隊」のバッジが現れます。",
+  earned:"獲得済み", pending:"まだ獲得していません",
+  success:"スタンプを３つ集めてバッジをゲット！", badge:"安城文化探検隊",
+  steps:["物語を１つ最後まで読んで「読了」を押しましょう。", "文化探検カードを３枚とも開きましょう。", "伝統遊びを１回最後まで遊びましょう。"]
+ },
+ {
+  intro:"完成活动，收集印章吧！集齐三个印章，就会出现“安城文化探险队”徽章。",
+  earned:"已获得印章", pending:"尚未获得印章",
+  success:"集齐三个印章，获得了徽章！", badge:"安城文化探险队",
+  steps:["读完一篇故事，点击“完成阅读”。", "打开全部三张文化探索卡片。", "完成一局传统游戏。"]
+ },
+ {
+  intro:"Hãy hoàn thành các hoạt động để sưu tập con dấu. Khi có đủ ba con dấu, huy hiệu ‘Khám phá văn hóa Anseong’ sẽ xuất hiện.",
+  earned:"Đã nhận con dấu", pending:"Chưa nhận con dấu",
+  success:"Bạn đã thu thập đủ ba con dấu và nhận được huy hiệu!", badge:"Khám phá văn hóa Anseong",
+  steps:["Đọc hết một truyện và bấm ‘Đọc xong’.", "Mở cả ba thẻ khám phá văn hóa.", "Chơi hết một lượt trò chơi truyền thống."]
+ },
+ {
+  intro:"Выполняйте задания и собирайте печати. Соберите все три, и появится значок «Знаток культуры Ансона».",
+  earned:"Печать получена", pending:"Печать ещё не получена",
+  success:"Вы собрали все три печати и получили значок!", badge:"Знаток культуры Ансона",
+  steps:["Дочитайте одну историю и нажмите «Прочитано».", "Откройте все три карточки о культуре.", "Завершите один раунд любой традиционной игры."]
+ }
+];
+
+function travelPassport(){
+ const copy=tr(passportCopy);
+ const collected=sectionCodes.filter(code=>saved[code]).length;
+ const complete=collected===sectionCodes.length;
+ const labels=t('labels');
+ const steps=sectionCodes.map((code,i)=>{
+  const earned=Boolean(saved[code]);
+  return `<li class="passport-step">
+    <span class="passport-stamp${earned?' done':''}" aria-label="${earned?copy.earned:copy.pending}">${code}${earned?'<span aria-hidden="true">✓</span>':''}</span>
+    <div><strong>${labels[i]}</strong><p>${copy.steps[i]}</p></div>
+  </li>`;
+ }).join('');
+ return `<section class="passport" aria-labelledby="passport-title">
+   <div class="passport-heading"><h2 id="passport-title">${t('passport')}</h2><span class="passport-count">${collected} / ${sectionCodes.length}</span></div>
+   <p class="passport-intro">${complete?copy.success:copy.intro}</p>
+   <ul class="passport-steps" role="list">${steps}</ul>
+   ${complete?`<div class="passport-reward">
+     <span class="passport-medal"><img src="${homeMenuIcons[1]}" width="288" height="288" alt=""></span>
+     <strong>${copy.badge}</strong>
+   </div>`:''}
+ </section>`;
+}
 
 function reading(){
 const pages=STORIES[book];page=Math.max(0,Math.min(page,pages.length-1));const s=pages[page],count=pages.length;
