@@ -10,8 +10,32 @@
 .map.illustrated-map{display:block;min-height:0;width:100%;max-width:780px;margin:0 auto;background:#faf5e8;isolation:isolate}
 .map.illustrated-map.map-step-1,.map.illustrated-map.map-step-2{max-width:430px}
 .map-art{display:block;width:100%;height:auto}
+.map-place-label {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  min-height: 24px;
+  padding: 2px 7px;
+  border: 1px solid #d0d8bd;
+  border-radius: 7px;
+  color: #233d2d;
+  background: #fffbeb;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+.map-place-label--north-korea { left: 36.8%; top: 35.8%; min-width: 51px; min-height: 28px; }
+.map-place-label--jeju { left: 35.5%; top: 93.5%; min-width: 43px; }
+.map-place-label--seoul { left: 50%; top: 28%; }
+.map-place-label--anseong { left: 50.7%; top: 41.8%; }
 .map-zoom{position:absolute;transform:translate(-50%,-50%);box-shadow:0 4px 16px #183c3b30;border:2px solid #fff;max-width:70%;font-size:14px;padding:12px 16px;line-height:1.4}
 .map-step-0 .map-zoom{left:46%;top:44%;transform:translateY(-50%);max-width:46%}.map-step-1 .map-zoom{left:50%;top:65%;min-width:112px}.map-step-2 .map-zoom{left:59%;top:45%;transform:translateY(-50%)}
+@media (max-width: 420px) {
+  .map-step-2 .map-zoom { left: 62%; top: 48%; }
+}
 .crumb{flex-wrap:wrap}.crumb button[aria-current=step]{background:var(--green);color:#fff}
 @media(max-width:700px){.map-zoom{font-size:12px;padding:9px 12px}}
 
@@ -378,10 +402,12 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 6px 12px;
 }
 .passport-heading h2 { margin: 0; font-size: clamp(18px, 2.4vw, 22px); }
 .passport-count {
+  margin-inline-start: auto;
   flex-shrink: 0;
   padding: 4px 12px;
   border-radius: 20px;

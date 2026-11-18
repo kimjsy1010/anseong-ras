@@ -5,7 +5,7 @@ let saved=readStore(),lang=LANGS.includes(saved.lang)?saved.lang:'ko',book=0,pag
 saved.visitedPlaces=[...visited];if(visited.size===3)saved.A=true;
 const tr=a=>lang==='ru'?russianInline(a):a[LANGS.indexOf(lang)], t=k=>tr(C[k]);
 function persist(){try{localStorage.setItem('anseong-ras-v1',JSON.stringify(saved))}catch{}}
-function stamp(id){saved[id]=true;persist()}
+function stamp(id){if(saved[id])return false;saved[id]=true;persist();return true}
 const routes=['home','reading','arts','sports'];
 function route(){return routes.includes(location.hash.slice(1))?location.hash.slice(1):'home'}
 function stop(){playing=false;cancelAnimationFrame(raf);keys.clear()}
@@ -47,6 +47,9 @@ function render(){
  document.documentElement.classList.toggle('sports-page',currentRoute==='sports');
  document.documentElement.classList.toggle('reading-page',currentRoute==='reading');
  $('#language').value=lang;
+ $('#language').ariaLabel=t('languageLabel');
+ $('#nav').ariaLabel=t('mainNavigation');
+ $('.close').ariaLabel=t('closeDialog');
  $('#guide').textContent=t('guide');
  const labels=t('labels');
  const compactLabels=tr(compactNavLabels);
@@ -131,7 +134,7 @@ function travelPassport(){
   </li>`;
  }).join('');
  return `<section class="passport" aria-labelledby="passport-title">
-   <div class="passport-heading"><h2 id="passport-title">${t('passport')}</h2><span class="passport-count">${collected} / ${sectionCodes.length}</span></div>
+   <div class="passport-heading"><h2 id="passport-title">${t('passport')}</h2><span class="passport-count">${t('stampCount')} ${collected} / ${sectionCodes.length}</span></div>
    <p class="passport-intro">${complete?copy.success:copy.intro}</p>
    <ul class="passport-steps" role="list">${steps}</ul>
    ${complete?`<div class="passport-reward">
@@ -144,7 +147,7 @@ function travelPassport(){
 function reading(){
 const pages=STORIES[book];page=Math.max(0,Math.min(page,pages.length-1));const s=pages[page],count=pages.length;
 app.innerHTML=head(0,'READING · 01')+`<div class="tabs">${t('books').map((b,i)=>`<button data-book="${i}" class="${book===i?'selected':''}">${b}</button>`).join('')}</div><article class="story ${s.image?'illustrated-story':''}"><div class="story-art ${s.image?'has-image':''}">${s.image?`<img src="${s.image}" alt="${tr(s.title)}" width="1536" height="1024">`:`<span>${s.icon}</span>`}</div><div class="story-body"><span class="eyebrow">${String(page+1).padStart(2,'0')} / ${String(count).padStart(2,'0')}</span><h2 tabindex="-1">${tr(s.title)}</h2><p>${tr(s.text)}</p><span class="word">${Array.isArray(s.word)?tr(s.word):s.word}</span></div></article><div class="pager"><button class="secondary" id="previous" ${page===0?'disabled':''}>${t('prev')}</button><span>${page+1} / ${count}</span><button class="primary" id="next">${page===count-1?t('finish'):t('next')}</button></div>${book===0?`<p class="story-source"><a href="https://www.anseong.go.kr/festival/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(['안성시 바우덕이축제 공식 홈페이지','Anseong Baudeogi Festival official website','安城市バウドギ祭り公式サイト','安城市巴乌德吉庆典官方网站','Trang chính thức lễ hội Baudeogi Anseong'])} ↗</a><br>${tr(['생애의 일화는 전승을 바탕으로 구성했습니다. 삽화는 이야기를 표현한 창작 그림입니다.','Life stories draw on local traditions. Illustrations are imaginative depictions.','生涯の逸話は伝承に基づき、挿絵は物語を表す創作です。','生平故事依据当地传说编写，插图为故事创作。','Các giai thoại dựa trên lời truyền lại. Tranh là minh họa sáng tạo.'])}</p>`:''}${book===1?`<p class="story-source"><a href="https://www.anseong.go.kr/tourPortal/munhak/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(C.books[0]&&['박두진문학관','Park Dujin Literature Museum','パク・トゥジン文学館','朴斗镇文学馆','Bảo tàng Văn học Park Dujin'])} ↗</a><br>${tr(PARK_NOTE)}</p>`:''}${book===2?`<p class="story-source"><a href="https://www.anseong.go.kr/tourPortal/museum/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(['안성맞춤박물관','Anseong Machum Museum','安城マッチュム博物館','安城 Machum博物馆','Bảo tàng Anseong Machum'])} ↗</a><br>${tr(YUGI_NOTE)}</p>`:''}<div class="feedback" id="reading-feedback" aria-live="polite"></div>`;
-document.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{book=+b.dataset.book;page=0;reading()});$('#previous').onclick=()=>{if(page>0)turnStoryPage(page-1)};$('#next').onclick=()=>{if(page<count-1){turnStoryPage(page+1)}else{stamp('R');$('#reading-feedback').textContent=t('done')}};
+document.querySelectorAll('[data-book]').forEach(b=>b.onclick=()=>{book=+b.dataset.book;page=0;reading()});$('#previous').onclick=()=>{if(page>0)turnStoryPage(page-1)};$('#next').onclick=()=>{if(page<count-1){turnStoryPage(page+1)}else{$('#reading-feedback').textContent=t(stamp('R')?'done':'readingComplete')}};
 }
 function turnStoryPage(nextPage){
  page=nextPage;
@@ -198,8 +201,20 @@ function placeCard(i){
 
 
 function cultureProgress(){
- const progress=`${visited.size} / ${PLACES.length}`;
+ const progress=`${t('cardCount')} ${visited.size} / ${PLACES.length}`;
  return visited.size===PLACES.length?progress+' · '+t('done'):progress;
+}
+
+const mapPlaceNames={
+ northKorea:["북한","North Korea","北朝鮮","朝鲜","Triều Tiên","Северная Корея"],
+ jeju:["제주도","Jeju Island","済州島","济州岛","Đảo Jeju","Остров Чеджу"],
+ seoul:["서울","Seoul","ソウル","首尔","Seoul","Сеул"]
+};
+
+function mapPlaceLabels(level){
+ const places=level===1?[['north-korea',tr(mapPlaceNames.northKorea)],['jeju',tr(mapPlaceNames.jeju)]]:
+  level===2?[['seoul',tr(mapPlaceNames.seoul)],['anseong',t('anseong')]]:[];
+ return places.map(([place,label])=>`<span class="map-place-label map-place-label--${place}">${label}</span>`).join('');
 }
 
 function arts(){
@@ -212,7 +227,7 @@ function arts(){
  const overlay=atAnseong?venueMarker('museum')+venueMarker('land'):`<button class="map-zoom primary" id="zoom">${nextLabel}</button>`;
  const cards=atAnseong?`<section class="place-cards" aria-label="${t('nav')[2]}">${[2,1,0].map(placeCard).join('')}</section><p class="map-progress" id="culture-progress" aria-live="polite">${cultureProgress()}</p>`:'';
  app.innerHTML=head(1,'ARTS · 02')+`<div class="crumb${atAnseong?' crumb--anseong':''}">${crumbs}</div><div class="map illustrated-map map-step-${mapLevel}">
-   <img class="map-art" src="${images[mapLevel]}" alt="${levels[mapLevel]}">${overlay}
+   <img class="map-art" src="${images[mapLevel]}" alt="${levels[mapLevel]}">${mapPlaceLabels(mapLevel)}${overlay}
  </div><p class="map-note">${atAnseong?tr(cultureCardHint):t('mapHint')}</p>${cards}`;
  document.querySelectorAll('[data-level]').forEach(button=>button.onclick=()=>{mapLevel=+button.dataset.level;arts()});
  if(!atAnseong){
@@ -239,13 +254,13 @@ function arts(){
 function sports(){
  const rope=gameType===1,beona=gameType===2;
  const character=`<img class="baudeogi-player" id="dancer" src="assets--characters--baudeogi-game-v2.webp" alt="${tr(['바우덕이','Baudeogi','バウドギ','巴乌德吉','Baudeogi'])}" draggable="false">`;
- app.innerHTML=head(2,'SPORTS · 03')+`<div class="tabs game-tabs">${[1,2,0].map(i=>`<button data-game="${i}" class="${gameType===i?'selected':''}" aria-pressed="${gameType===i}">${t('games')[i]}</button>`).join('')}</div><div class="game-wrap"><p class="game-intro">${t('instructions')[gameType]}</p><div class="scorebar"><span>${t('score')} <b id="score">0</b> · ${t('best')} <b id="best">${saved['best'+gameType]||0}</b></span><span>${t('time')} <b id="time">${rope?20:30}</b>s</span></div><div class="game-stage baudeogi-stage game-${gameType}"><span class="sun"></span><div class="stage-hills"></div>${rope?`<div class="rope-post rope-post-left" aria-hidden="true"></div><div class="rope-post rope-post-right" aria-hidden="true"></div><div class="rope" aria-hidden="true"></div><div class="character-anchor" id="player">${character}</div>`:beona?`<div class="beona-act" id="player">${character}<span class="beona-stick"></span><span class="beona-disc" id="disc"></span></div>`:`<div class="character-anchor">${character}</div><div class="target"></div><span class="jegi jegi-sprite" id="player"><img src="assets--props--jegi-v1.webp" alt="${t('games')[0]}" draggable="false"></span>`}</div>${rope?'<div class="balance"><span class="needle" id="needle" style="left:50%"></span></div><progress class="progress" id="distance" value="0" max="20"></progress>':beona?`<p class="timing-label">${t('spinHint')}</p><div class="balance beona-timing"><span class="needle" id="needle" style="left:0%"></span></div>`:''}<div class="feedback" id="feedback" aria-live="polite">${t('ready')}</div><div class="controls controls-game-${gameType}"><button class="primary" id="start">${t('play')}</button>${rope?`<button class="secondary" id="left" disabled>${t('left')}</button><button class="secondary" id="right" disabled>${t('right')}</button>`:`<button class="secondary" id="kick" disabled>${beona?t('spin'):t('kick')}</button>`}</div><p class="game-context">${t('gameNotes')[gameType]}</p></div>`;
+ app.innerHTML=head(2,'SPORTS · 03')+`<div class="tabs game-tabs">${[1,2,0].map(i=>`<button data-game="${i}" class="${gameType===i?'selected':''}" aria-pressed="${gameType===i}">${t('games')[i]}</button>`).join('')}</div><div class="game-wrap"><p class="game-intro">${t('instructions')[gameType]}</p><div class="scorebar"><span>${t('score')} <b id="score">0</b> · ${t('best')} <b id="best">${saved['best'+gameType]||0}</b></span><span>${t('time')} <b id="time">${rope?20:30}</b>${t('timeUnit')}</span></div><div class="game-stage baudeogi-stage game-${gameType}"><span class="sun"></span><div class="stage-hills"></div>${rope?`<div class="rope-post rope-post-left" aria-hidden="true"></div><div class="rope-post rope-post-right" aria-hidden="true"></div><div class="rope" aria-hidden="true"></div><div class="character-anchor" id="player">${character}</div>`:beona?`<div class="beona-act" id="player">${character}<span class="beona-stick"></span><span class="beona-disc" id="disc"></span></div>`:`<div class="character-anchor">${character}</div><div class="target"></div><span class="jegi jegi-sprite" id="player"><img src="assets--props--jegi-v1.webp" alt="${t('games')[0]}" draggable="false"></span>`}</div>${rope?'<div class="balance"><span class="needle" id="needle" style="left:50%"></span></div><progress class="progress" id="distance" value="0" max="20"></progress>':beona?`<p class="timing-label">${t('spinHint')}</p><div class="balance beona-timing"><span class="needle" id="needle" style="left:0%"></span></div>`:''}<div class="feedback" id="feedback" aria-live="polite">${t('ready')}</div><div class="controls controls-game-${gameType}"><button class="primary" id="start">${t('play')}</button>${rope?`<button class="secondary" id="left" disabled>${t('left')}</button><button class="secondary" id="right" disabled>${t('right')}</button>`:`<button class="secondary" id="kick" disabled>${beona?t('spin'):t('kick')}</button>`}</div><p class="game-context">${t('gameNotes')[gameType]}</p></div>`;
  document.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>{stop();gameType=+b.dataset.game;sports()});$('#start').onclick=startGame;
  if(rope){for(const [id,key]of[['left','ArrowLeft'],['right','ArrowRight']]){const b=$('#'+id);b.onpointerdown=e=>{if(!playing)return;e.preventDefault();keys.add(key);b.setPointerCapture(e.pointerId)};b.onpointerup=b.onpointercancel=b.onlostpointercapture=()=>keys.delete(key)}}else $('#kick').onclick=kick;
 }
 function startGame(){
  stop();sports();const now=performance.now();game={start:now,last:now,score:0,streak:0,y:0,jegiVelocity:70,jegiAngle:0,cycle:-1,hit:false,balance:0,velocity:0,phase:Math.random()*6,beatStart:now,beatDuration:gameType===2?1700:1650,position:0,rotation:0,spinSpeed:90};playing=true;
- $('#start').disabled=true;document.querySelectorAll('.controls .secondary').forEach(b=>b.disabled=false);$('#feedback').textContent=t('ready');raf=requestAnimationFrame(tick);
+ $('#start').disabled=true;document.querySelectorAll('.controls .secondary').forEach(b=>b.disabled=false);$('#feedback').textContent=t('gamePlaying')[gameType];raf=requestAnimationFrame(tick);
 }
 function tick(now){
  if(!playing)return;const elapsed=(now-game.start)/1000,dt=Math.min((now-game.last)/1000,.05);game.last=now;
@@ -287,7 +302,17 @@ function kick(){
  if($('#dancer').animate)$('#dancer').animate(gameType===2?[{transform:'rotate(0deg)'},{transform:'rotate(-7deg)'},{transform:'rotate(0deg)'}]:[{transform:'translateY(0) rotate(0deg)'},{transform:'translateY(-16px) rotate(-18deg)'},{transform:'translateY(0) rotate(0deg)'}],{duration:300});
  $('#score').textContent=game.score;
 }
-function endGame(won){stop();stamp('S');saved['best'+gameType]=Math.max(saved['best'+gameType]||0,game.score);persist();$('#score').textContent=game.score;$('#best').textContent=saved['best'+gameType];$('#feedback').textContent=(won?t('end'):t('fall'))+' '+t('done');$('#start').disabled=false;document.querySelectorAll('.controls .secondary').forEach(b=>b.disabled=true)}
+function endGame(won){
+ stop();
+ saved['best'+gameType]=Math.max(saved['best'+gameType]||0,game.score);
+ const earnedStamp=stamp('S');
+ if(!earnedStamp)persist();
+ $('#score').textContent=game.score;
+ $('#best').textContent=saved['best'+gameType];
+ $('#feedback').textContent=t(won?'end':'fall')+(earnedStamp?' '+t('done'):'');
+ $('#start').disabled=false;
+ document.querySelectorAll('.controls .secondary').forEach(b=>b.disabled=true);
+}
 
 function modal(html){$('#modal-body').innerHTML=html;$('#modal').showModal()}
 $('#guide').onclick=()=>modal(`<h2>${t('guide')}</h2><div class="guide-purpose">${t('guideText').split('\n\n').map(p=>`<p>${p}</p>`).join('')}</div><h3>${t('sources')}</h3><p>${tr(['글의 문화·역사 정보는 안성시청 공식 누리집의 아래 자료를 참고해 학습용으로 재구성했습니다. 삽화와 게임용 이미지는 생성형 AI를 활용해 제작했습니다.','Cultural and historical information was adapted for learning from the official Anseong City websites below. Illustrations and game images were created using generative AI.','文化・歴史の情報は、以下の安城市公式サイトを参考に学習用に再構成しました。挿絵とゲーム画像は生成AIを用いて制作しました。','文化与历史文字参考以下安城市政府官方网站资料，改写为学习内容。插图和游戏图像使用生成式AI制作。','Thông tin văn hóa và lịch sử được biên soạn cho học tập từ các trang chính thức của thành phố Anseong dưới đây. Tranh và hình ảnh trò chơi được tạo bằng AI tạo sinh.'])}</p><ul class="guide-sources">${[
