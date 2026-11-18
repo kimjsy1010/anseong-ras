@@ -19,7 +19,26 @@ const homeArtAlt=[
  'Баудоги машет рукой на фоне зелёных холмов и беседки в Ансоне'
 ];
 function render(){stop();const currentRoute=route();document.documentElement.lang=lang;document.documentElement.classList.toggle("sports-page",currentRoute==="sports");document.documentElement.classList.toggle("reading-page",currentRoute==="reading");$('#language').value=lang;$('#guide').textContent=t('guide');$('#nav').innerHTML=routes.map((r,i)=>`<a href="#${r}" class="${currentRoute===r?'active':''}" ${currentRoute===r?'aria-current="page"':''}>${t('nav')[i]}</a>`).join('');({home:home,reading:reading,arts:arts,sports:sports}[currentRoute])()}
-function home(){app.innerHTML=`<section class="hero"><div><span class="eyebrow">HELLO, ANSEONG! 👋</span><h1>${t('title')}</h1><p>${t('intro')}</p><a class="primary" href="#reading">${t('start')}</a></div><div class="hero-art"><img src="assets--home--anseong-baudeogi-v1.webp" alt="${tr(homeArtAlt)}" width="1536" height="1024" fetchpriority="high"></div></section><div class="section-top"><h2>${t('choose')}</h2><span>THREE WAYS TO EXPLORE</span></div><section class="cards">${['📖','🧭','🪁'].map((x,i)=>`<a class="card" href="#${routes[i+1]}"><div class="icon">${x}</div><small>${['01 · READING','02 · ARTS','03 · SPORTS'][i]}</small><h3>${t('labels')[i]}</h3><p>${t('descs')[i]}</p><span>${t('nav')[i+1]}</span><span class="arrow">↗</span></a>`).join('')}</section><div class="passport"><span>✈</span><strong>${t('passport')}</strong>${['R','A','S'].map(x=>`<span class="stamp ${saved[x]?'done':''}" aria-label="${x}: ${saved[x]?'✓':'—'}">${x}${saved[x]?'✓':''}</span>`).join('')}</div>`}
+
+const homeMenuIcons=[
+ 'assets--home-icons--reading-v1.webp',
+ 'assets--home-icons--map-v1.webp',
+ 'assets--home-icons--play-v1.webp'
+];
+
+function home(){
+ const menus=homeMenuIcons.map((icon,i)=>`<a class="card" href="#${routes[i+1]}">
+   <span class="home-card-icon"><img src="${icon}" alt="" width="288" height="288" decoding="async"></span>
+   <div class="home-card-text"><h3>${t('labels')[i]}</h3><p>${t('descs')[i]}</p></div>
+   <span class="home-card-link">${t('nav')[i+1]}<span aria-hidden="true">→</span></span>
+ </a>`).join('');
+ app.innerHTML=`<section class="hero"><div><span class="eyebrow">HELLO, ANSEONG! 👋</span><h1>${t('title')}</h1><p>${t('intro')}</p><a class="primary" href="#reading">${t('start')}</a></div><div class="hero-art"><img src="assets--home--anseong-baudeogi-v1.webp" alt="${tr(homeArtAlt)}" width="1536" height="1024" fetchpriority="high"></div></section>
+ <div class="section-top"><h2>${t('choose')}</h2></div>
+ <section class="cards">${menus}</section>
+ <div class="passport"><span>✈</span><strong>${t('passport')}</strong>${['R','A','S'].map(x=>`<span class="stamp ${saved[x]?'done':''}" aria-label="${x}: ${saved[x]?'✓':'—'}">${x}${saved[x]?'✓':''}</span>`).join('')}</div>`;
+}
+
+
 function reading(){
 const pages=STORIES[book];page=Math.max(0,Math.min(page,pages.length-1));const s=pages[page],count=pages.length;
 app.innerHTML=head(0,'READING · 01')+`<div class="tabs">${t('books').map((b,i)=>`<button data-book="${i}" class="${book===i?'selected':''}">${b}</button>`).join('')}</div><article class="story ${s.image?'illustrated-story':''}"><div class="story-art ${s.image?'has-image':''}">${s.image?`<img src="${s.image}" alt="${tr(s.title)}" width="1536" height="1024">`:`<span>${s.icon}</span>`}</div><div class="story-body"><span class="eyebrow">${String(page+1).padStart(2,'0')} / ${String(count).padStart(2,'0')}</span><h2 tabindex="-1">${tr(s.title)}</h2><p>${tr(s.text)}</p><span class="word">${Array.isArray(s.word)?tr(s.word):s.word}</span></div></article><div class="pager"><button class="secondary" id="previous" ${page===0?'disabled':''}>${t('prev')}</button><span>${page+1} / ${count}</span><button class="primary" id="next">${page===count-1?t('finish'):t('next')}</button></div>${book===0?`<p class="story-source"><a href="https://www.anseong.go.kr/festival/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(['안성시 바우덕이축제 공식 홈페이지','Anseong Baudeogi Festival official website','安城市バウドギ祭り公式サイト','安城市巴乌德吉庆典官方网站','Trang chính thức lễ hội Baudeogi Anseong'])} ↗</a><br>${tr(['생애의 일화는 전승을 바탕으로 구성했습니다. 삽화는 이야기를 표현한 창작 그림입니다.','Life stories draw on local traditions. Illustrations are imaginative depictions.','生涯の逸話は伝承に基づき、挿絵は物語を表す創作です。','生平故事依据当地传说编写，插图为故事创作。','Các giai thoại dựa trên lời truyền lại. Tranh là minh họa sáng tạo.'])}</p>`:''}${book===1?`<p class="story-source"><a href="https://www.anseong.go.kr/tourPortal/munhak/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(C.books[0]&&['박두진문학관','Park Dujin Literature Museum','パク・トゥジン文学館','朴斗镇文学馆','Bảo tàng Văn học Park Dujin'])} ↗</a><br>${tr(PARK_NOTE)}</p>`:''}${book===2?`<p class="story-source"><a href="https://www.anseong.go.kr/tourPortal/museum/main.do" target="_blank" rel="noopener">${t('sources')} · ${tr(['안성맞춤박물관','Anseong Machum Museum','安城マッチュム博物館','安城 Machum博物馆','Bảo tàng Anseong Machum'])} ↗</a><br>${tr(YUGI_NOTE)}</p>`:''}<div class="feedback" id="reading-feedback" aria-live="polite"></div>`;
