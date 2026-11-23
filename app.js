@@ -121,6 +121,15 @@ const passportCopy=[
  }
 ];
 
+const programCredit=[
+ "이 프로그램은 안성교육지원청 국제교류협력 콘텐츠 공모사업으로 제작되었습니다.",
+ "This program was created through the Anseong Office of Education’s open call for international exchange and cooperation content.",
+ "このプログラムは、安城教育支援庁の国際交流協力コンテンツ公募事業により制作されました。",
+ "本程序通过安城教育支援厅的国际交流合作内容公开征集项目制作。",
+ "Chương trình này được thực hiện trong khuôn khổ đợt tuyển chọn nội dung giao lưu và hợp tác quốc tế của Phòng Giáo dục Anseong.",
+ "Эта программа создана в рамках открытого конкурса Управления образования Ансона по разработке материалов для международного обмена и сотрудничества."
+];
+
 function travelPassport(){
  const copy=tr(passportCopy);
  const collected=sectionCodes.filter(code=>saved[code]).length;
@@ -141,6 +150,7 @@ function travelPassport(){
      <span class="passport-shield" aria-hidden="true"><span class="passport-shield-brand">안성맞춤</span>RAS</span>
      <strong>${copy.badge}</strong>
    </div>`:''}
+   <p class="program-credit">${tr(programCredit)}</p>
  </section>`;
 }
 

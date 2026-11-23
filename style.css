@@ -524,6 +524,14 @@ header {
   background: #fff3d3;
 }
 .passport-reward strong { font-size: clamp(17px, 2.4vw, 22px); line-height: 1.3; text-align: center; }
+.program-credit {
+  margin: 14px 0 0;
+  color: #40544a;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.55;
+  text-align: center;
+}
 .passport-shield {
   --shield-shape: polygon(50% 0, 73% 8%, 98% 13%, 96% 49%, 88% 69%, 72% 85%, 50% 100%, 28% 85%, 12% 69%, 4% 49%, 2% 13%, 27% 8%);
   position: relative;
